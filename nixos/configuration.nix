@@ -46,6 +46,8 @@
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
+  virtualisation.docker.enable = true;
+
   # Enable the GNOME Desktop Environment.
   #services.xserver.displayManager.gdm.enable = true;
   #services.xserver.desktopManager.gnome.enable = true;
@@ -87,7 +89,7 @@
   users.users.leonardo = {
     isNormalUser = true;
     description = "leonardo";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
   };
 
   users.defaultUserShell = pkgs.zsh;
@@ -104,9 +106,13 @@
         sha256 ="02068scaxz93md4xs91bqm8kjccnfzpqi0pcxyazyxhwb4n9pdg2";
       })
         ];
+        configFile = super.writeText "config.h" (builtins.readFile Dwm/dwm-config.h);
+        postPatch = oldAttrs.postPatch or "" + "\necho 'Using own config file...'\n cp ${configFile} config.def.h";
       });
     })
   ];
+
+  systemd.packages = [ pkgs.docker ];
 
 
   # List packages installed in system profile. To search, run:
@@ -115,8 +121,9 @@
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     st
     wget
+    docker
+    docker-compose
     firefox 
-    dmenu
     discord
     gnumake
     neofetch
