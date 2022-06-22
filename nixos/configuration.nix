@@ -114,12 +114,12 @@
 
   systemd.packages = [ pkgs.docker ];
 
-
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     st
+    nodejs
     wget
     docker
     docker-compose
@@ -137,8 +137,6 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
-
-
 
   programs.zsh = {
     enable = true;
@@ -169,4 +167,5 @@
   system.stateVersion = "22.05"; # Did you read the comment?
 
 }
+
 
