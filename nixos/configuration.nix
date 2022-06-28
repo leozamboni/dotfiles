@@ -110,6 +110,27 @@
         postPatch = oldAttrs.postPatch or "" + "\necho 'Using own config file...'\n cp ${configFile} config.def.h";
       });
     })
+    (self: super: {
+     neovim = super.neovim.override {
+     vimAlias = true;
+      configure = {
+        customRC = builtins.readFile ./config/init.vim;
+        packages.myPlugins = with pkgs.vimPlugins; {
+        start = [
+		neoscroll
+		          vim-surround # Shortcuts for setting () {} etc.
+          coc-nvim coc-git coc-highlight coc-python coc-rls coc-vetur coc-vimtex coc-yaml coc-html coc-json # auto completion
+          vim-nix # nix highlight
+          vimtex # latex stuff
+          fzf-vim # fuzzy finder through vim
+          nerdtree # file structure inside nvim
+          rainbow # Color parenthesis
+        ];
+        opt = [];
+        };
+      };
+     };
+   })
   ];
 
   systemd.packages = [ pkgs.docker ];
@@ -128,6 +149,10 @@
     gnumake
     neofetch
     gcc
+    qbittorrent
+    vlc
+    vscode-with-extensions
+	python3
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -145,6 +170,13 @@
     ohMyZsh.plugins = [ "git" ];
     ohMyZsh.theme = "frisk";
     syntaxHighlighting.enable = true;
+  };
+
+
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   };
 
   # List services that you want to enable:
