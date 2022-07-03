@@ -92,10 +92,13 @@
     extraGroups = [ "networkmanager" "wheel" "docker" ];
   };
 
-  users.defaultUserShell = pkgs.zsh;
-
-  # Allow unfree packages
+ # NVIDIA drivers are unfree.
   nixpkgs.config.allowUnfree = true;
+
+  services.xserver.videoDrivers = [ "nvidia" ];
+  hardware.opengl.enable = true;
+
+  users.defaultUserShell = pkgs.zsh;
 
   nixpkgs.overlays = [
     (self: super: {
@@ -114,18 +117,9 @@
      neovim = super.neovim.override {
      vimAlias = true;
       configure = {
-        customRC = builtins.readFile ./config/init.vim;
+ #       customRC = builtins.readFile ./config/init.vim;
         packages.myPlugins = with pkgs.vimPlugins; {
-        start = [
-		neoscroll
-		          vim-surround # Shortcuts for setting () {} etc.
-          coc-nvim coc-git coc-highlight coc-python coc-rls coc-vetur coc-vimtex coc-yaml coc-html coc-json # auto completion
-          vim-nix # nix highlight
-          vimtex # latex stuff
-          fzf-vim # fuzzy finder through vim
-          nerdtree # file structure inside nvim
-          rainbow # Color parenthesis
-        ];
+#        start = [];
         opt = [];
         };
       };
