@@ -8,7 +8,9 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+       /home/leonardo/GitHub/nix-framework/river/server/configuration.nix
     ];
+
 
   # Bootloader.
   boot.loader.grub.enable = true;
