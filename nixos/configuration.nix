@@ -1,16 +1,13 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-       /home/leonardo/GitHub/nix-framework/river/server/configuration.nix
     ];
-
 
   # Bootloader.
   boot.loader.grub.enable = true;
@@ -48,11 +45,12 @@
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
+  services.logmein-hamachi.enable = true;
   virtualisation.docker.enable = true;
 
   # Enable the GNOME Desktop Environment.
-  #services.xserver.displayManager.gdm.enable = true;
-  #services.xserver.desktopManager.gnome.enable = true;
+  # services.xserver.displayManager.gdm.enable = true;
+  # services.xserver.desktopManager.gnome.enable = true;
   services.xserver.windowManager.dwm.enable = true;
 
   # Configure keymap in X11
@@ -76,9 +74,8 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
+    #If you want to use JACK applications, uncomment this
+    # jack.enable = true;
     # use the example session manager (no others are packaged yet so this is enabled by default,
     # no need to redefine it in your config for now)
     #media-session.enable = true;
@@ -94,13 +91,14 @@
     extraGroups = [ "networkmanager" "wheel" "docker" ];
   };
 
- # NVIDIA drivers are unfree.
+  # NVIDIA drivers are unfree.
   nixpkgs.config.allowUnfree = true;
 
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.opengl.enable = true;
 
-  users.defaultUserShell = pkgs.zsh;
+  #users.defaultUserShell = pkgs.zsh;
+  users.defaultUserShell = pkgs.fish;
 
   nixpkgs.overlays = [
     (self: super: {
@@ -119,9 +117,7 @@
      neovim = super.neovim.override {
      vimAlias = true;
       configure = {
- #       customRC = builtins.readFile ./config/init.vim;
         packages.myPlugins = with pkgs.vimPlugins; {
-#        start = [];
         opt = [];
         };
       };
@@ -168,7 +164,6 @@
     syntaxHighlighting.enable = true;
   };
 
-
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
@@ -193,7 +188,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.05"; # Did you read the comment?
-
 }
-
-
